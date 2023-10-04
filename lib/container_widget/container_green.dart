@@ -7,10 +7,12 @@ class ContainerGreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.green,
-      padding: const EdgeInsets.all(30),
-      child:   ContainerPink( ),
+    return Scaffold(
+      body: Container(
+        color: Colors.green,
+        padding: const EdgeInsets.all(30),
+        child:   ContainerPink( ),
+      ),
     );
   }
 }
