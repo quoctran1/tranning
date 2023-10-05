@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+      onTap: (){
+        WidgetsBinding.instance.focusManager.primaryFocus!.unfocus();
       },
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home: Scaffold(
-          body: FocusScreen(),
+          body: OverlayScreen(),
         ),
       ),
     );

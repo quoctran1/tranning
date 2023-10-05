@@ -11,9 +11,12 @@ class OverlayScreen extends StatefulWidget {
 class _OverlayScreenState extends State<OverlayScreen> {
   OverlayEntry? overlayEntry;
   OverlayState? overlayState;
-  GlobalKey buttonKey = GlobalKey();
   ValueNotifier<Offset> dragValue = ValueNotifier(Offset(20, 20));
   LayerLink layerLink = LayerLink();
+
+  GlobalKey buttonKey = GlobalKey();
+  ValueNotifier<Offset> offsetValue =
+      ValueNotifier(const Offset(30, 30));
 
   @override
   void initState() {
@@ -23,49 +26,101 @@ class _OverlayScreenState extends State<OverlayScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ButtonClick(
-              key: buttonKey,
-              title: 'show',
-              onTap: () {
-                showOverlay();
-              },
-            ),
-            Row(
-              children: [
-                ButtonClick(
-                  title: 'destroy',
-                  onTap: () {
-                    destroy();
-                  },
+        body: GestureDetector(
+      onPanUpdate: (DragUpdateDetails detail) {
+        print(detail.delta);
+        final offset= offsetValue.value+detail.delta;
+        offsetValue.value=offset;
+      },
+      child: ValueListenableBuilder(
+        builder: (BuildContext context, value, Widget? child) {
+          return Stack(
+            children: [
+              Positioned(
+                top: offsetValue.value.dy,
+                left: offsetValue.value.dx,
+                child: CompositedTransformTarget(
+                  link: layerLink,
+                  child: ButtonClick(
+                    key: buttonKey,
+                    title: 'show',
+                    onTap: () {
+                      showOverlay();
+                    },
+                  ),
                 ),
-              ],
-            ),
-            ButtonClick(
-              title: 'getWidgetInfo',
-              onTap: () {
-                getWidgetInfo();
-              },
-            ),
-          ],
-        ),
-        // Positioned(top: 420, left:50.5, child: draw()),
-      ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      ButtonClick(
+                        title: 'destroy',
+                        onTap: () {
+                          destroy();
+                        },
+                      ),
+                    ],
+                  ),
+                  ButtonClick(
+                    title: 'getWidgetInfo',
+                    onTap: () {
+                      getWidgetInfo();
+                    },
+                  ),
+                ],
+              ),
+              // Positioned(top: 420, left:50.5, child: draw()),
+            ],
+          );
+        },
+        valueListenable: offsetValue,
+      ),
     ));
   }
 
-  void showOverlay() {}
+  void showOverlay() {
+    final offset = getWidgetInfo();
+    overlayEntry = OverlayEntry(builder: (BuildContext context) {
+      return Positioned(
+        left: offset.dx,
+        top: offset.dy,
 
-  void destroy() {}
+        child: CompositedTransformFollower(
+          link: layerLink,
+          targetAnchor:Alignment.bottomRight,
+          child: Container(
+            constraints: const BoxConstraints(
+              maxWidth: 100,
+              maxHeight: 30,
+            ),
+            color: Colors.pink.withOpacity(0.3),
+            child: const Material(
+              color: Colors.pink,
+              child: Text('showOverlay',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+            ),
+          ),
+        ),
+      );
+    });
+    overlayState = Overlay.of(context);
+    overlayState!.insert(overlayEntry!);
+  }
+
+  void destroy() {
+    overlayEntry!.remove();
+  }
 
   Offset getWidgetInfo() {
     final result =
         buttonKey.currentContext!.findRenderObject() as RenderBox;
-    final offset = result.localToGlobal((Offset.zero));
+    final offset =
+        result.localToGlobal(result.size.bottomRight((Offset.zero)));
     return offset;
   }
 
