@@ -1,13 +1,5 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+class GenericTypeExample{
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-void main() {
   List<FlightTicket> flights = [
     FlightTicket(
       image: "Assets.images.airAsia.path",
@@ -51,35 +43,47 @@ void main() {
       imageName: "Assets.images.airAsia.path",
       carName: 'NNS24',
       carPrice: 21,
-    ),
-    CarTicket(
+    ),  CarTicket(
       imageName: "Assets.images.airAsia.path",
       carName: 'NNS24',
       carPrice: 215,
-    ),
-    CarTicket(
+    ),  CarTicket(
       imageName: "Assets.images.airAsia.path",
       carName: 'NNS24',
       carPrice: 915,
-    ),
-    CarTicket(
+    ),  CarTicket(
       imageName: "Assets.images.airAsia.path",
       carName: 'NNS24',
       carPrice: 615,
     ),
+
   ];
 
-
- final result= getMaxPrice(cars);
-  print(result);
-}
-T getSecond<T>(List<T> list){
-  return list[1];
 }
 
 int getMaxPrice<T extends FlightTicket>(List<T> tickets) {
   int maxPrice = 0;
   for (T ticket in tickets) {
+    if (ticket.price > maxPrice) {
+      maxPrice = ticket.price;
+    }
+  }
+  return maxPrice;
+}
+
+// int getMaxPriceOriginal<T>(List<T> tickets) {
+//   int maxPrice = 0;
+//   for (T ticket in tickets) {
+//     if (ticket.price > maxPrice) {
+//       maxPrice = ticket.price;
+//     }
+//   }
+//   return maxPrice;
+// }
+
+int getMaxPriceOriginal(List<FlightTicket> tickets) {
+  int maxPrice = 0;
+  for (FlightTicket ticket in tickets) {
     if (ticket.price > maxPrice) {
       maxPrice = ticket.price;
     }
@@ -94,17 +98,17 @@ class FlightTicket {
 
   FlightTicket(
       {required this.flightNo,
-      required this.image,
-      this.departureDate,
-      this.arrivalDate,
-      required this.price});
+        required this.image,
+        this.departureDate,
+        this.arrivalDate,
+        required this.price});
 }
 
-class CarTicket extends FlightTicket {
-  final String carName, imageName;
+class CarTicket /*extends FlightTicket*/{
+  final String carName,imageName;
   final int carPrice;
 
   CarTicket({required this.carName,required this.imageName,required this.carPrice,})
-      :super(flightNo: carName,image: imageName,price: carPrice);
+      /*:super(flightNo: carName,image: imageName,price: carPrice)*/;
 
 }

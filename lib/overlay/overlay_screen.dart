@@ -11,12 +11,12 @@ class OverlayScreen extends StatefulWidget {
 class _OverlayScreenState extends State<OverlayScreen> {
   OverlayEntry? overlayEntry;
   OverlayState? overlayState;
-  ValueNotifier<Offset> dragValue = ValueNotifier(Offset(20, 20));
+  ValueNotifier<Offset> dragValue = ValueNotifier(Offset(220, 220));
   LayerLink layerLink = LayerLink();
 
   GlobalKey buttonKey = GlobalKey();
   ValueNotifier<Offset> offsetValue =
-      ValueNotifier(const Offset(30, 30));
+      ValueNotifier(const Offset(220, 220));
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _OverlayScreenState extends State<OverlayScreen> {
                     key: buttonKey,
                     title: 'show',
                     onTap: () {
-                      showOverlay();
+                      showOverlay(context);
                     },
                   ),
                 ),
@@ -80,7 +80,7 @@ class _OverlayScreenState extends State<OverlayScreen> {
     ));
   }
 
-  void showOverlay() {
+  void showOverlay(BuildContext context) {
     final offset = getWidgetInfo();
     overlayEntry = OverlayEntry(builder: (BuildContext context) {
       return Positioned(
